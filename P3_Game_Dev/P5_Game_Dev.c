@@ -1,8 +1,6 @@
 #include <stdio.h>
 
-#define MAX 100
-
-void inputSparseMatrix(int rows, int cols, int mat[MAX][MAX], int nonZero) {
+void inputSparseMatrix(int rows, int cols, int mat[100][100], int nonZero) {
     int r, c, val;
     for (int i = 0; i < nonZero; i++) {
         printf("Enter row, col, value for object %d: ", i + 1);
@@ -14,19 +12,19 @@ void inputSparseMatrix(int rows, int cols, int mat[MAX][MAX], int nonZero) {
     }
 }
 
-void addMatrices(int rows, int cols, int A[MAX][MAX], int B[MAX][MAX], int result[MAX][MAX]) {
+void addMatrices(int rows, int cols, int A[100][100], int B[100][100], int result[100][100]) {
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
             result[i][j] = A[i][j] + B[i][j];
 }
 
-void transposeMatrix(int rows, int cols, int mat[MAX][MAX], int trans[MAX][MAX]) {
+void transposeMatrix(int rows, int cols, int mat[100][100], int trans[100][100]) {
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
             trans[j][i] = mat[i][j];
 }
 
-void printMatrix(int rows, int cols, int mat[MAX][MAX]) {
+void printMatrix(int rows, int cols, int mat[100][100]) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++)
             printf("%3d ", mat[i][j]);
@@ -36,8 +34,8 @@ void printMatrix(int rows, int cols, int mat[MAX][MAX]) {
 
 int main() {
     int rows, cols;
-    int buildings[MAX][MAX] = {0}, vehicles[MAX][MAX] = {0}, characters[MAX][MAX] = {0};
-    int scene[MAX][MAX] = {0}, temp[MAX][MAX] = {0}, finalFrame[MAX][MAX] = {0};
+    int buildings[100][100] = {0}, vehicles[100][100] = {0}, characters[100][100] = {0};
+    int scene[100][100] = {0}, temp[100][100] = {0}, finalFrame[100][100] = {0};
 
     printf("Enter scene size (rows cols): ");
     scanf("%d %d", &rows, &cols);
@@ -58,6 +56,9 @@ int main() {
     addMatrices(rows, cols, buildings, vehicles, temp);
     addMatrices(rows, cols, temp, characters, scene);
 
+    printf("\nScene Matrix (Before Transpose):\n");
+    printMatrix(rows, cols, scene);
+
     transposeMatrix(rows, cols, scene, finalFrame);
 
     printf("\nFinal Transposed Frame sent to GPU:\n");
@@ -65,3 +66,4 @@ int main() {
 
     return 0;
 }
+

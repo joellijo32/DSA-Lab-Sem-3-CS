@@ -4,9 +4,7 @@
 #include <ctype.h>
 #include <math.h>
 
-#define MAX 100
-
-char opStack[MAX];
+char opStack[100];
 int opTop = -1;
 
 void pushOp(char ch) {
@@ -32,32 +30,34 @@ int isOperator(char ch) {
     return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^';
 }
 
+int isVariable(char ch) {
+    return isalpha(ch);
+}
+
 void infixToPostfix(char* infix, char* postfix) {
     int i = 0, j = 0;
     char ch;
-
     while ((ch = infix[i++]) != '\0') {
-        if (isdigit(ch)) {
+        if (isVariable(ch)) {
             postfix[j++] = ch;
         } else if (ch == '(') {
             pushOp(ch);
         } else if (ch == ')') {
             while (peekOp() != '(')
                 postfix[j++] = popOp();
-            popOp(); // pop '('
+            popOp(); // remove '('
         } else if (isOperator(ch)) {
             while (opTop != -1 && precedence(peekOp()) >= precedence(ch))
                 postfix[j++] = popOp();
             pushOp(ch);
         }
     }
-
     while (opTop != -1)
         postfix[j++] = popOp();
     postfix[j] = '\0';
 }
 
-int valStack[MAX];
+int valStack[100];
 int valTop = -1;
 
 void pushVal(int val) {
@@ -69,12 +69,24 @@ int popVal() {
 }
 
 int evaluatePostfix(char* postfix) {
+    int varValues[26] = {0};
+    int usedVars[26] = {0};
     int i = 0;
     char ch;
-
     while ((ch = postfix[i++]) != '\0') {
-        if (isdigit(ch)) {
-            pushVal(ch - '0'); 
+        if (isVariable(ch))
+            usedVars[ch - 'a'] = 1;
+    }
+    for (int j = 0; j < 26; j++) {
+        if (usedVars[j]) {
+            printf("Enter value for %c: ", 'a' + j);
+            scanf("%d", &varValues[j]);
+        }
+    }
+    i = 0;
+    while ((ch = postfix[i++]) != '\0') {
+        if (isVariable(ch)) {
+            pushVal(varValues[ch - 'a']);
         } else if (isOperator(ch)) {
             int b = popVal();
             int a = popVal();
@@ -89,49 +101,51 @@ int evaluatePostfix(char* postfix) {
             pushVal(result);
         }
     }
-
     return popVal();
 }
 
 int main() {
     int choice;
-    char infix[MAX], postfix[MAX];
+    char infix[100] = "", postfix[100] = "";
+    int expressionAvailable = 0;
 
     while (1) {
-        printf("\n--- MENU ---\n");
-        printf("1. Convert Infix to Postfix\n");
+        printf("\n1. Convert Infix to Postfix\n");
         printf("2. Evaluate Postfix\n");
         printf("3. Exit\n");
-        printf("Enter your choice: ");
+        printf("Enter choice: ");
         scanf("%d", &choice);
         getchar();
 
         switch (choice) {
             case 1:
                 printf("Enter infix expression: ");
-                fgets(infix, MAX, stdin);
-                infix[strcspn(infix, "\n")] = '\0'; 
+                fgets(infix, sizeof(infix), stdin);
+                infix[strcspn(infix, "\n")] = '\0';
                 opTop = -1;
                 infixToPostfix(infix, postfix);
-                printf("Postfix expression: %s\n", postfix);
+                printf("Postfix: %s\n", postfix);
+                expressionAvailable = 1;
                 break;
 
             case 2:
-                printf("Enter postfix expression: ");
-                fgets(postfix, MAX, stdin);
-                postfix[strcspn(postfix, "\n")] = '\0';
-                valTop = -1;
-                printf("Result: %d\n", evaluatePostfix(postfix));
+                if (!expressionAvailable) {
+                    printf("No postfix expression available. Convert infix first.\n");
+                } else {
+                    printf("Postfix: %s\n", postfix);
+                    valTop = -1;
+                    printf("Result: %d\n", evaluatePostfix(postfix));
+                }
                 break;
 
             case 3:
-                printf("Exiting program.\n");
                 exit(0);
 
             default:
-                printf("Invalid choice. Try again.\n");
+                printf("Invalid choice.\n");
         }
     }
 
     return 0;
 }
+
