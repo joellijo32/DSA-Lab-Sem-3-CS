@@ -26,4 +26,3 @@ int main(){
 	printf("Mode = %d\n", mode); 
 	return 0; 
 }
-
