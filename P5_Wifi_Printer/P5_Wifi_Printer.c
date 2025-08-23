@@ -195,7 +195,7 @@ int main() {
                 break;
                 
             case 7:
-                printf("Goodbye!\n");
+               
                 break;
                 
             default:
