@@ -1,5 +1,5 @@
 # DSA-Lab-Sem-3-CS
-The DSA Problems and Solutions done for my B.tech Semester 3 Lab . (All programs are done in C language) (Please Ignore the .exe files and run only the .c file 🙂)
+The DSA Problems and Solutions done for my B.tech Semester 3 Lab . (All programs are done in C language) (Please Ignore the .exe files and run the .c file 🙂)
 Here's the questions : 
 
 Extra Questions (Not included in the main lab cycle): 
