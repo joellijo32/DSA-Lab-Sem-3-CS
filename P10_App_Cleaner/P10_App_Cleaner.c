@@ -2,70 +2,97 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct {
+struct Node {
     char name[50];
     int freq;
-} App;
+    struct Node* next;
+};
 
-typedef struct {
-    App apps[100];
-    int size;
-} AppManager;
+struct Node* head = NULL;
 
-void addApp(AppManager *m, char *name) {
-    strcpy(m->apps[m->size].name, name);
-    m->apps[m->size].freq = 0;
-    m->size++;
+struct Node* createNode(char* name) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    strcpy(newNode->name, name);
+    newNode->freq = 0;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void addApp(char* name) {
+    struct Node* newNode = createNode(name);
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL) {
+            if (strcmp(temp->name, name) == 0) {
+                printf("App already exists.\n");
+                free(newNode);
+                return;
+            }
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
     printf("App '%s' added successfully.\n", name);
 }
 
-void openApp(AppManager *m, char *name) {
-    for (int i = 0; i < m->size; i++) {
-        if (strcmp(m->apps[i].name, name) == 0) {
-            m->apps[i].freq++;
-            printf("Opened %s (frequency = %d)\n", name, m->apps[i].freq);
+void openApp(char* name) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        if (strcmp(temp->name, name) == 0) {
+            temp->freq++;
+            printf("Opened %s (frequency = %d)\n", name, temp->freq);
             return;
         }
+        temp = temp->next;
     }
     printf("App not found: %s\n", name);
 }
 
-void showApps(AppManager *m) {
-    if (m->size == 0) {
+void showApps() {
+    if (head == NULL) {
         printf("No apps available.\n");
         return;
     }
+    struct Node* temp = head;
     printf("Apps and their usage:\n");
-    for (int i = 0; i < m->size; i++) {
-        printf("%s (freq = %d)\n", m->apps[i].name, m->apps[i].freq);
+    while (temp != NULL) {
+        printf("%s (freq = %d)\n", temp->name, temp->freq);
+        temp = temp->next;
     }
 }
 
-void cleanApps(AppManager *m) {
-    if (m->size == 0) {
+void cleanApps() {
+    if (head == NULL) {
         printf("No apps to clean.\n");
         return;
     }
 
-    int minIndex = 0;
-    for (int i = 1; i < m->size; i++) {
-        if (m->apps[i].freq < m->apps[minIndex].freq) {
-            minIndex = i;
+    struct Node* temp = head;
+    struct Node* minNode = head;
+    struct Node* prev = NULL;
+    struct Node* minPrev = NULL;
+
+    while (temp != NULL) {
+        if (temp->freq < minNode->freq) {
+            minNode = temp;
+            minPrev = prev;
         }
+        prev = temp;
+        temp = temp->next;
     }
 
-    printf("Cleaning (removing): %s (freq = %d)\n", 
-           m->apps[minIndex].name, m->apps[minIndex].freq);
-
-    for (int i = minIndex; i < m->size - 1; i++) {
-        m->apps[i] = m->apps[i + 1];
+    if (minPrev == NULL) {
+        head = head->next;
+    } else {
+        minPrev->next = minNode->next;
     }
-    m->size--;
+    printf("Cleaning (removing): %s (freq = %d)\n", minNode->name, minNode->freq);
+    free(minNode);
 }
 
 int main() {
-    AppManager manager;
-    manager.size = 0;
     int choice;
     char appName[50];
 
@@ -82,18 +109,18 @@ int main() {
         if (choice == 1) {
             printf("Enter app name: ");
             scanf("%s", appName);
-            addApp(&manager, appName);
+            addApp(appName);
         }
         else if (choice == 2) {
             printf("Enter app name to open: ");
             scanf("%s", appName);
-            openApp(&manager, appName);
+            openApp(appName);
         }
         else if (choice == 3) {
-            showApps(&manager);
+            showApps();
         }
         else if (choice == 4) {
-            cleanApps(&manager);
+            cleanApps();
         }
         else if (choice == 5) {
             printf("Exiting...\n");
