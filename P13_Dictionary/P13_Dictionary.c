@@ -89,7 +89,7 @@ struct Node* deleteNode(struct Node* root, char word[]) {
 void displayAll(struct Node* root) {
     if (root != NULL) {
         displayAll(root->left);
-        printf("%-20s : %s\n", root->word, root->meaning);
+        printf("%s : %s\n", root->word, root->meaning);
         displayAll(root->right);
     }
 }
@@ -151,8 +151,6 @@ int main() {
                     printf("Dictionary is empty\n");
                 } else {
                     printf("\nDictionary contents:\n");
-                    printf("%-20s : %s\n", "WORD", "MEANING");
-                    printf("----------------------------------------\n");
                     displayAll(root);
                 }
                 break;
