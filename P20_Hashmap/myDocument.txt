@@ -1,0 +1,4 @@
+the studnt participete in the technolgy fest and wone many activity ponts
+he used a compiter to run the spel cheker programe on his documant
+the has tabl storres all the correct wrds from the vocabulary file
+this systm helps in detecting wrng spellings in the text
