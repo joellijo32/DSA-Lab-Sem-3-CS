@@ -4,26 +4,22 @@
 
 #define MAX_STATES 10000
 
-// State structure representing water levels in all three jugs
 typedef struct {
     int jug10, jug7, jug4;
 } State;
 
-// Queue node for BFS
 typedef struct Node {
     State state;
     struct Node* parent;
-    int action; // 0-5 representing pour operations
+    int action;
 } Node;
 
-// Queue structure
 typedef struct {
     Node* nodes[MAX_STATES];
     int front, rear;
 } Queue;
 
-// Hash table for visited states
-int visited[11][8][5]; // (0-10) x (0-7) x (0-4)
+int visited[11][8][5]; 
 
 void initQueue(Queue* q) {
     q->front = q->rear = 0;
@@ -53,7 +49,6 @@ int isGoal(State s) {
     return s.jug7 == 2 || s.jug4 == 2;
 }
 
-// Pour from source to dest, returns new state
 State pour(State s, int from, int to) {
     State newState = s;
     int* jugs[3] = {&newState.jug10, &newState.jug7, &newState.jug4};
@@ -107,7 +102,6 @@ int solve() {
     initQueue(&q);
     memset(visited, 0, sizeof(visited));
     
-    // Initial state: 10L empty, 7L full, 4L full
     Node* start = (Node*)malloc(sizeof(Node));
     start->state.jug10 = 0;
     start->state.jug7 = 7;
@@ -131,7 +125,6 @@ int solve() {
             return 1;
         }
         
-        // Try all 6 possible pour operations
         for (int from = 0; from < 3; from++) {
             for (int to = 0; to < 3; to++) {
                 if (from == to) continue;

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define TABLE_SIZE 100   // Increased size to reduce collisions
+#define TABLE_SIZE 100   
 #define MAX_WORD_LEN 100
 
 typedef struct Node {
@@ -13,7 +13,6 @@ typedef struct Node {
 
 Node *hashTable[TABLE_SIZE];
 
-// Hash function (case-insensitive)
 unsigned int hash(char *word) {
     unsigned int sum = 0;
     for (int i = 0; word[i]; i++) {
@@ -22,7 +21,6 @@ unsigned int hash(char *word) {
     return sum % TABLE_SIZE;
 }
 
-// Insert a word into the hash table
 void insert(char *word) {
     unsigned int idx = hash(word);
     Node *newNode = malloc(sizeof(Node));
@@ -31,7 +29,6 @@ void insert(char *word) {
     hashTable[idx] = newNode;
 }
 
-// Search for a word in the hash table (case-insensitive)
 int search(char *word) {
     unsigned int idx = hash(word);
     Node *cur = hashTable[idx];
@@ -42,7 +39,6 @@ int search(char *word) {
     return 0;
 }
 
-// Clean a word: remove non-alphabetic characters and convert to lowercase
 void cleanWord(char *word) {
     int j = 0;
     for (int i = 0; word[i]; i++) {
@@ -51,7 +47,6 @@ void cleanWord(char *word) {
     word[j] = '\0';
 }
 
-// Check if two words have edit distance exactly one
 int editDistanceOne(char *a, char *b) {
     int lenA = strlen(a), lenB = strlen(b);
     if (abs(lenA - lenB) > 1) return 0;
@@ -91,7 +86,6 @@ int editDistanceOne(char *a, char *b) {
     return 0;
 }
 
-// Suggest corrections for a misspelt word
 void suggestCorrection(char *word) {
     int found = 0;
     for (int i = 0; i < TABLE_SIZE; i++) {
@@ -107,7 +101,6 @@ void suggestCorrection(char *word) {
     if (!found) printf("  No suggestions found\n");
 }
 
-// Free the hash table memory
 void freeHashTable() {
     for (int i = 0; i < TABLE_SIZE; i++) {
         Node *cur = hashTable[i];

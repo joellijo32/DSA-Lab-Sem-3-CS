@@ -1,4 +1,3 @@
-// comparing all the famous sorting algorithms interms of number of logic steps used
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,10 +5,8 @@
 
 #define MAX_SIZE 1000
 
-// Global step counters for each sorting algorithm
 long bubbleSteps = 0, insertionSteps = 0, radixSteps = 0, mergeSteps = 0, quickSteps = 0;
 
-// Function prototypes
 void bubbleSort(int arr[], int n);
 void insertionSort(int arr[], int n);
 void radixSort(int arr[], int n);
@@ -30,7 +27,7 @@ int main() {
     int choice;
     int *tempArr = NULL;
 
-    char filename[] = "integers.txt";  // 🔹 Hardcoded filename
+    char filename[] = "integers.txt"; 
 
     printf("Reading numbers from file: %s\n", filename);
 
@@ -51,7 +48,6 @@ int main() {
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        // Make a copy of the original array to sort without changing original
         tempArr = malloc(size * sizeof(int));
         if (!tempArr) {
             printf("Memory allocation failed.\n");
@@ -116,7 +112,6 @@ int main() {
     return 0;
 }
 
-// Read integers from file, return array pointer and size via pointer
 int *readFile(char *filename, int *size) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
@@ -145,51 +140,47 @@ void printArray(int arr[], int n) {
     printf("\n");
 }
 
-// Bubble Sort in Descending order
 void bubbleSort(int arr[], int n) {
     for (int i = 0; i < n-1; i++) {
         for (int j = 0; j < n-i-1; j++) {
-            bubbleSteps++;  // comparison step
+            bubbleSteps++; 
             if (arr[j] < arr[j+1]) {
                 int temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
-                bubbleSteps++;  // swap step
+                bubbleSteps++;
             }
         }
     }
 }
 
-// Insertion Sort in Descending order
 void insertionSort(int arr[], int n) {
     for (int i = 1; i < n; i++) {
         int key = arr[i];
         int j = i - 1;
-        insertionSteps++;  // one move for taking key
+        insertionSteps++;  
 
         while (j >= 0 && arr[j] < key) {
-            insertionSteps++;  // comparison
+            insertionSteps++;  
             arr[j + 1] = arr[j];
-            insertionSteps++;  // move
+            insertionSteps++;  
             j--;
         }
-        if (j >= 0) insertionSteps++; // last failed comparison
+        if (j >= 0) insertionSteps++; 
         arr[j + 1] = key;
-        insertionSteps++;  // move key
+        insertionSteps++;  
     }
 }
 
-// Get max value from array (used in radix sort)
 int getMax(int arr[], int n) {
     int max = arr[0];
     for (int i = 1; i < n; i++) {
-        radixSteps++;  // comparison step
+        radixSteps++;
         if (arr[i] > max) max = arr[i];
     }
     return max;
 }
 
-// Counting sort used by radix sort for a particular digit
 void countRadixSort(int arr[], int n, int exp) {
     int output[n];
     int count[10] = {0};
@@ -218,7 +209,6 @@ void countRadixSort(int arr[], int n, int exp) {
     }
 }
 
-// Radix Sort in Descending order
 void radixSort(int arr[], int n) {
     int m = getMax(arr, n);
     for (int exp = 1; m / exp > 0; exp *= 10) {
@@ -226,7 +216,6 @@ void radixSort(int arr[], int n) {
     }
 }
 
-// Merge two sorted halves in descending order
 void merge(int arr[], int l, int m, int r) {
     int n1 = m - l + 1;
     int n2 = r - m;
@@ -244,7 +233,7 @@ void merge(int arr[], int l, int m, int r) {
 
     int i = 0, j = 0, k = l;
     while (i < n1 && j < n2) {
-        mergeSteps++; // comparison
+        mergeSteps++; 
         if (L[i] >= R[j]) {
             arr[k++] = L[i++];
         } else {
@@ -261,7 +250,6 @@ void merge(int arr[], int l, int m, int r) {
     }
 }
 
-// Merge Sort in Descending order
 void mergeSort(int arr[], int l, int r) {
     if (l < r) {
         int m = l + (r - l) / 2;
@@ -271,19 +259,18 @@ void mergeSort(int arr[], int l, int r) {
     }
 }
 
-// Partition for Quick Sort (descending)
 int partition(int arr[], int low, int high) {
     int pivot = arr[high];
     int i = low - 1;
 
     for (int j = low; j <= high - 1; j++) {
-        quickSteps++; // comparison
+        quickSteps++;
         if (arr[j] >= pivot) {
             i++;
             int temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
-            quickSteps++; // swap
+            quickSteps++;
         }
     }
     int temp = arr[i + 1];
@@ -293,7 +280,6 @@ int partition(int arr[], int low, int high) {
     return i + 1;
 }
 
-// Quick Sort in Descending order
 void quickSort(int arr[], int low, int high) {
     if (low < high) {
         int pi = partition(arr, low, high);

@@ -3,22 +3,18 @@
 
 #define MAX 50
 
-//directions
 int dx[4] = {-1, 1, 0, 0};
 int dy[5] = {0, 0, -1, 1};
 
-//structure for cell in maze
 typedef struct {
         int x, y;
 }Cell;
 
-//strut for queue (used in BFS)
 typedef struct {
         Cell arr[MAX * MAX];
         int rear, front;
 }Queue;
 
-//operations
 void initQueue(Queue *q) {
         q->front = q->rear = 0;
 }
@@ -35,17 +31,15 @@ Cell dequeue(Queue *q) {
         return q->arr[q->front++];
 }
 
-//check if cell is valid
 int isValid(int x, int y, int m, int n, int maze[MAX][MAX], int visited[MAX][MAX]) {
         return (x >= 0 && x < n && y >= 0 && y < m && maze[x][y] == 0 && !visited[x][y]);
 }
 
-//BFS function to find minimum distance
 int bfs(int maze[MAX][MAX], int m, int n, Cell start, Cell end) {
         int visited[MAX][MAX] = { 0 };
         int distance[MAX][MAX];
 
-        //INITIALIZE DISTANCE
+        
         for(int i=0; i<m; i++) {
                 for(int j=0; j<n; j++) {
                         distance[i][j] = -1;
@@ -61,12 +55,12 @@ int bfs(int maze[MAX][MAX], int m, int n, Cell start, Cell end) {
         while(!isEmpty(&q)) {
                 Cell curr = dequeue(&q);
 
-                //if reached the destination
+                
                 if(curr.x == end.x && curr.y == end.y) {
                         return distance[curr.x][curr.y];
                 }
 
-                //other directions
+                
                 for(int i=0; i<4; i++) {
                         int nx = curr.x + dx[i];
                         int ny = curr.y + dy[i];
